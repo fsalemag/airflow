@@ -1,11 +1,8 @@
 from datetime import timedelta
-# The DAG object; we'll need this to instantiate a DAG
 from airflow import DAG
-# Operators; we need this to operate!
 from airflow.operators.bash_operator import BashOperator
 from airflow.utils.dates import days_ago
-# These args will get passed on to each operator
-# You can override them on a per-task basis during operator initialization
+
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
