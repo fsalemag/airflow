@@ -8,9 +8,11 @@ def sendEmail(name, email):
     s = smtplib.SMTP(host='smtp-mail.outlook.com', port=587)
     s.starttls()
 
-    cEmail = Variable.get("hotmail")
-
+    print("About to  get creds")
+    cEmail = Variable.get("hotmail", , deserialize_json=True)
+    print(cEmail)
     MY_ADDRESS, PASS = cEmail["username"], cEmail["password"]
+    print(MY_ADDRESS, PASS)
     s.login(MY_ADDRESS, PASS)
 
     msg = MIMEMultipart() 
