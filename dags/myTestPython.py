@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 
 import time
 from pprint import pprint
+from scripts.sendEmail import sendEmail
 
 seven_days_ago = datetime.combine(
         datetime.today() - timedelta(7), datetime.min.time())
@@ -20,13 +21,13 @@ dag = DAG(
     schedule_interval=None)
 
 
-def my_sleeping_function(random_base):
-    '''This is a function that will run within the DAG execution'''
-    time.sleep(random_base)
+
 
 
 def print_context(ds, **kwargs):
+    print("Kwargs CARALHO!")
     pprint(kwargs)
+    print("DS CARALHI!")
     print(ds)
     return 'Whatever you return gets printed in the logs'
 
@@ -36,15 +37,12 @@ run_this = PythonOperator(
     python_callable=print_context,
     dag=dag)
 
-for i in range(10):
-    '''
-    Generating 10 sleeping task, sleeping from 0 to 9 seconds
-    respectively
-    '''
+
+for i in range(2):
     task = PythonOperator(
-        task_id='sleep_for_'+str(i),
-        python_callable=my_sleeping_function,
-        op_kwargs={'random_base': float(i)/10},
+        task_id='send_email_'+str(i),
+        python_callable=sendEmail,
+        op_kwargs={'name': "Alberto", "email":"francisco.salema.g@gmail.com"},
         dag=dag)
 
     task.set_upstream(run_this)
