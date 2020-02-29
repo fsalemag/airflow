@@ -24,7 +24,7 @@ dag = DAG(
 check_inbox = PythonOperator(
     task_id='check_inbox',
     provide_context=True,
-    python_callable=scripts.checkInbox,
+    python_callable=checkInbox,
     dag=dag)
 
 
