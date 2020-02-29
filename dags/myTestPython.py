@@ -1,15 +1,14 @@
 from __future__ import print_function
 from builtins import range
-from airflow.operators import PythonOperator
-from airflow.models import DAG
+from airflow.operators.python_operator import PythonOperator
+from airflow.models import DAG, XCom
 from datetime import datetime, timedelta
 
 import time
 from pprint import pprint
-from scripts.sendEmail import sendEmail
+import scripts
 
-seven_days_ago = datetime.combine(
-        datetime.today() - timedelta(7), datetime.min.time())
+seven_days_ago = datetime.combine(datetime.today() - timedelta(7), datetime.min.time())
 
 args = {
     'owner': 'airflow',
@@ -17,32 +16,23 @@ args = {
 }
 
 dag = DAG(
-    dag_id='example_python_operator', default_args=args,
-    schedule_interval=None)
+    dag_id='emailBOT', default_args=args,
+    schedule_interval='0 0/5 * * * ? *')
 
 
 
-
-
-def print_context(ds, **kwargs):
-    print("Kwargs CARALHO!")
-    pprint(kwargs)
-    print("DS CARALHI!")
-    print(ds)
-    return 'Whatever you return gets printed in the logs'
-
-run_this = PythonOperator(
-    task_id='print_the_context',
+check_inbox = PythonOperator(
+    task_id='check_inbox',
     provide_context=True,
-    python_callable=print_context,
+    python_callable=scripts.checkInbox,
     dag=dag)
 
 
-for i in range(2):
-    task = PythonOperator(
-        task_id='send_email_'+str(i),
-        python_callable=sendEmail,
-        op_kwargs={'name': "Alberto", "email":"francisco.salema.g@gmail.com"},
-        dag=dag)
+send_email = PythonOperator(
+    task_id='send_email_',
+    python_callable=scripts.sendEmail,
+    provide_context=True, 
+    op_kwargs={'name': "Person", "email":"x_salema@hotmail.com"},
+    dag=dag)
 
-    task.set_upstream(run_this)
+check_inbox >> send_email
