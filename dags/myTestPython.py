@@ -18,7 +18,7 @@ args = {
 
 dag = DAG(
     dag_id='emailBOT', default_args=args,
-    schedule_interval='0 0/5 * * * ? *')
+    schedule_interval="*/1 * * * *")
 
 
 
