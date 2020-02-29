@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 import time
 from pprint import pprint
-import scripts
+from scripts import checkInbox
 
 seven_days_ago = datetime.combine(datetime.today() - timedelta(7), datetime.min.time())
 

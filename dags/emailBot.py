@@ -6,7 +6,7 @@ import scripts
 
 args = {
     "owner": "airflow",
-    "start_date": datetime(2020, 2, 1)
+    "start_date": datetime(2020, 2, 29)
 }
 
 dag = DAG(
