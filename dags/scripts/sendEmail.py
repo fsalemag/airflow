@@ -31,7 +31,7 @@ def sendEmail(**kwargs):
         msg['Subject'] = "Automatic reply"
 
         # add in the message body
-        msg.attach(MIMEText(message, 'plain'))
+        msg.attach(MIMEText(message, 'html'))
 
         # send the message via the server set up earlier.
         s.send_message(msg)

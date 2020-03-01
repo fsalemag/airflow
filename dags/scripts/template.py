@@ -1,13 +1,6 @@
 from scripts.contribute import contribute
+from scripts.email import template
 
-template = """Dear {From},
-This is an automatic message to the request '{request}' sent on {date} at {time}.
-
-{body}
-
-Best regards,
-Francisco's robot
-"""
 
 def helpCall(body, commands):
     """Displays available commands and usage"""
