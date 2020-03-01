@@ -1,3 +1,5 @@
+from scripts.contribute import contribute
+
 template = """Dear {From},
 This is an automatic message to the request '{request}' sent on {date} at {time}.
 
@@ -18,13 +20,10 @@ def helpCall(body, commands):
     
     return body
 
-def weatherCall(body, commands):
-    """Gets the current weather"""
-    return body
 
 COMMANDS = {
     "help": helpCall,
-    "weather": weatherCall
+    "contribute": contribute 
 }
 
 def composeMessage(From, To, subject, date):
