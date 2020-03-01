@@ -56,7 +56,7 @@ def parseMessages(socket, folder, Subject="", From=""):
                         return From, To, subject, date
     
 
-def checkInbox():
+def checkInbox(**kwargs):
     try:
         cEmail = Variable.get("hotmail", deserialize_json=True)
         MY_ADDRESS, PASS = cEmail["username"], cEmail["password"]
