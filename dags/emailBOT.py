@@ -17,22 +17,24 @@ args = {
 }
 
 dag = DAG(
-    dag_id='emailBOT', default_args=args,
-    schedule_interval="*/1 * * * *")
-
-
+    dag_id='emailBOT', 
+    default_args=args,
+    schedule_interval="*/1 * * * *"
+)
 
 check_inbox = PythonOperator(
     task_id='check_inbox',
     provide_context=True,
     python_callable=checkInbox,
-    dag=dag)
+    dag=dag
+)
 
 
 send_email = PythonOperator(
     task_id='send_email',
     python_callable=sendEmail,
     provide_context=True, 
-    dag=dag)
+    dag=dag
+)
 
 check_inbox >> send_email

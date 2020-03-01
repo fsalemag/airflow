@@ -8,7 +8,7 @@ def sendEmail(**kwargs):
     ti = kwargs['ti']
     inbox = ti.xcom_pull(key=None, task_ids='check_inbox')
 
-    if inbox:
+    if inbox and isinstance(inbox, tuple):
         From, To, subject, date = inbox
         message = f'Dear {From},\nThis is an automatic message.\n\nWith love,\nFrancisco\'s robot '
         s = smtplib.SMTP(host='smtp-mail.outlook.com', port=587)
@@ -31,6 +31,8 @@ def sendEmail(**kwargs):
         # send the message via the server set up earlier.
         s.send_message(msg)
 
+        print("Sent email")
         return "Success"
     else:
+        print("Nothing in the mailbox")
         return None

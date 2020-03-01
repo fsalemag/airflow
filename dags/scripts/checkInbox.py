@@ -8,7 +8,7 @@ import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-# from airflow.models import Variable
+from airflow.models import Variable
 
 
 # Parses list of tree structure
@@ -65,25 +65,21 @@ def parseMessages(socket, folder, Subject="", From=""):
 
 def checkInbox(**kwargs):
     try:
-        # cEmail = Variable.get("hotmail", deserialize_json=True)
-        # MY_ADDRESS, PASS = cEmail["username"], cEmail["password"]
 
         print("Fetching credentials")
-
-        MY_ADDRESS, PASS = "pyflow@hotmail.com", "qwerty12345"
+        cEmail = Variable.get("hotmail", deserialize_json=True)
+        MY_ADDRESS, PASS = cEmail["username"], cEmail["password"]
         
         print("Got credentials")
-
         M = imaplib.IMAP4_SSL('imap-mail.outlook.com', 993)
         M.login(MY_ADDRESS, PASS) 
 
         print("Logged in")
-
         structure = getStructure(M)
-
         res = parseMessages(M, "Inbox", From="", Subject="")
 
-        print("Finished successfuly, output:\n" + res)
+        print("Finished successfuly, output:\n")
+        print(res)
 
     except Exception as e:
         res = None
