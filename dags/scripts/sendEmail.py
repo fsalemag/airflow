@@ -2,6 +2,8 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from airflow.models import Variable
+from scripts.template import composeMessage
+import datetime
 
 def sendEmail(**kwargs):
 
@@ -10,7 +12,10 @@ def sendEmail(**kwargs):
 
     if inbox and isinstance(inbox, tuple):
         From, To, subject, date = inbox
-        message = f'Dear {From},\nThis is an automatic message.\n\nWith love,\nFrancisco\'s robot '
+
+        message, email = composeMessage(From, To, subject, date)
+
+        
         s = smtplib.SMTP(host='smtp-mail.outlook.com', port=587)
         s.starttls()
 
@@ -21,9 +26,9 @@ def sendEmail(**kwargs):
         msg = MIMEMultipart() 
 
         # setup the parameters of the message
-        msg['From']=MY_ADDRESS
-        msg['To']=MY_ADDRESS
-        msg['Subject']="Automatic reply"
+        msg['From'] = MY_ADDRESS
+        msg['To'] = email
+        msg['Subject'] = "Automatic reply"
 
         # add in the message body
         msg.attach(MIMEText(message, 'plain'))
@@ -31,7 +36,7 @@ def sendEmail(**kwargs):
         # send the message via the server set up earlier.
         s.send_message(msg)
 
-        print("Sent email")
+        print(f"Sent email to '{email}'")
         return "Success"
     else:
         print("Nothing in the mailbox")
