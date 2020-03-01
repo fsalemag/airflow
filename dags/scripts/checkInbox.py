@@ -66,7 +66,7 @@ def checkInbox(**kwargs):
         structure = getStructure(M)
 
         res = parseMessages(M, "Inbox", From="", Subject="")
-        print(Res)
+        print(res)
     except Exception as e:
         res = None
         print(e)
