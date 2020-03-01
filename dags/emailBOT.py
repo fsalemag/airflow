@@ -1,10 +1,7 @@
-from __future__ import print_function
-from builtins import range
 from airflow.operators.python_operator import PythonOperator
-from airflow.models import DAG, XCom
-from datetime import datetime, timedelta
-import time
-from pprint import pprint
+from airflow.models import DAG
+from datetime import datetime
+
 from scripts.sendEmail import sendEmail
 from scripts.checkInbox import checkInbox
 
@@ -26,7 +23,6 @@ check_inbox = PythonOperator(
     python_callable=checkInbox,
     dag=dag
 )
-
 
 send_email = PythonOperator(
     task_id='send_email',

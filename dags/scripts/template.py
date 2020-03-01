@@ -1,5 +1,3 @@
-import datetime as dt
-
 template = """Dear {From},
 This is an automatic message to the request '{request}' sent on {date} at {time}.
 
@@ -11,6 +9,9 @@ Francisco's robot
 
 def helpCall(body, commands):
     """Displays available commands and usage"""
+
+    body += "Welcome to my Pyflow bot. To execute a command send an email to 'pyflow@hotmail.com' with the subject '-e <command>'."
+    body += "\nThere can be multiple commands. The currently available commands are:\n"
 
     for command in commands:
         body += f"{command}: {commands[command].__doc__}\n"
@@ -47,6 +48,8 @@ def composeMessage(From, To, subject, date):
         else:
             body += f"Don't recognize command '{command}'"
     
+    body += "\n\n\nProject: github.com/fsalemag/airflow"
+
     msg = template.format(From=name, request=", ".join(commands), body=body, date=strDate, time=strTime)
     return msg, email
 
