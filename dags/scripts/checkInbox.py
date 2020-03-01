@@ -34,7 +34,7 @@ def parseMessages(socket, folder, Subject="", From=""):
     pFrom  = r'From: (.*)\r\n'
     pTo = r'To: (.*)\r\n'
     pSubject = r'Subject: ([^\r\n]*).*'
-    pDate = r'Date: ([^\r\n]*)'
+    pDate = r'Date: ([^\-\+\r\n]*)'
 
     for ID in msg_ids[0].split():
         typ, msg_data = socket.fetch(str(int(ID)), '(BODY.PEEK[HEADER])')
@@ -45,12 +45,12 @@ def parseMessages(socket, folder, Subject="", From=""):
 
                 if re.search(pSubject, s):                    
                     date = re.search(pDate, s).groups()[0]
-                    date = dt.datetime.strptime(date.split(" +")[0], "%a, %d %b %Y %X")
+                    date = dt.datetime.strptime(date.split(" +")[0], "%a, %d %b %Y %X ")
 
                     subject = re.search(pSubject, s).groups()[0]
                     To = re.search(pTo, s).groups()[0]
                     From = re.search(pFrom, s).groups()[0]
-
+                    print(f'{From} {subject}')
                     if subject.startswith('-e'):
                         socket.store(ID,'+FLAGS','\Seen')
                         return From, To, subject, date
@@ -66,9 +66,11 @@ def checkInbox(**kwargs):
         structure = getStructure(M)
 
         res = parseMessages(M, "Inbox", From="", Subject="")
-
-    except:
+        print(Res)
+    except Exception as e:
         res = None
+        print(e)
+
     finally:
         M.close()
         M.logout()
