@@ -11,7 +11,7 @@ from scripts.checkInbox import checkInbox
 
 args = {
     'owner': 'airflow',
-    'start_date': datetime(2020, 3, 1, 20, 40, 0), 
+    'start_date': datetime(2020, 3, 1, 19, 59, 0), 
 }
 
 dag = DAG(
