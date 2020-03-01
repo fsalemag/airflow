@@ -9,11 +9,11 @@ from pprint import pprint
 from scripts.sendEmail import sendEmail
 from scripts.checkInbox import checkInbox
 
-seven_days_ago = datetime.combine(datetime.today() - timedelta(7), datetime.min.time())
+five_minutes_ago = datetime.combine(datetime.now() - timedelta(seconds=60*5), datetime.min.time())
 
 args = {
     'owner': 'airflow',
-    'start_date': seven_days_ago,
+    'start_date': five_minutes_ago, 
 }
 
 dag = DAG(
