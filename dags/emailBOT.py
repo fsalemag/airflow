@@ -3,7 +3,6 @@ from builtins import range
 from airflow.operators.python_operator import PythonOperator
 from airflow.models import DAG, XCom
 from datetime import datetime, timedelta
-
 import time
 from pprint import pprint
 from scripts.sendEmail import sendEmail
@@ -12,7 +11,7 @@ from scripts.checkInbox import checkInbox
 
 args = {
     'owner': 'airflow',
-    'start_date': datetime.datetime(2020, 3, 1, 15, 45, 0), 
+    'start_date': datetime(2020, 3, 1, 15, 45, 0), 
 }
 
 dag = DAG(
