@@ -50,9 +50,9 @@ def parseMessages(socket, folder, Subject="", From=""):
                     subject = re.search(pSubject, s).groups()[0]
                     To = re.search(pTo, s).groups()[0]
                     From = re.search(pFrom, s).groups()[0]
-
                     print(f"From {From} Subject: {subject} - {date}")
                     socket.store(ID,'+FLAGS','\Seen')
+
 
                     if subject.startswith('-e'):
                         socket.copy(ID, "AUTO")
@@ -82,11 +82,13 @@ def checkInbox(**kwargs):
         structure = getStructure(M)
 
         res = parseMessages(M, "Inbox", From="", Subject="")
+
         print("Finished successfuly, output:\n" + res)
 
     except Exception as e:
         res = None
         print(e)
+
     finally:
         M.close()
         M.logout()
