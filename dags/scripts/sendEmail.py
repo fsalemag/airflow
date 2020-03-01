@@ -3,7 +3,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from airflow.models import Variable
 
-def sendEmail(name, email, **kwargs):
+def sendEmail(**kwargs):
 
     ti = kwargs['ti']
     inbox = ti.xcom_pull(key=None, task_ids='check_inbox')
@@ -22,7 +22,7 @@ def sendEmail(name, email, **kwargs):
 
         # setup the parameters of the message
         msg['From']=MY_ADDRESS
-        msg['To']=email
+        msg['To']=MY_ADDRESS
         msg['Subject']="Automatic reply"
 
         # add in the message body

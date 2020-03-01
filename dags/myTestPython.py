@@ -30,10 +30,9 @@ check_inbox = PythonOperator(
 
 
 send_email = PythonOperator(
-    task_id='send_email_',
+    task_id='send_email',
     python_callable=sendEmail,
     provide_context=True, 
-    op_kwargs={'name': "Person", "email":"x_salema@hotmail.com"},
     dag=dag)
 
 check_inbox >> send_email

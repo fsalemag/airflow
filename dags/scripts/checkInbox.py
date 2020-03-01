@@ -8,7 +8,7 @@ import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from airflow.models import Variable
+# from airflow.models import Variable
 
 
 # Parses list of tree structure
@@ -34,7 +34,7 @@ def parseMessages(socket, folder, Subject="", From=""):
     pFrom  = r'From: (.*)\r\n'
     pTo = r'To: (.*)\r\n'
     pSubject = r'Subject: ([^\r\n]*).*'
-    pDate = r'Date: ([^\r\n]*)'
+    pDate = r'Date: ([^\-\+\r\n]*)'
 
     for ID in msg_ids[0].split():
         typ, msg_data = socket.fetch(str(int(ID)), '(BODY.PEEK[HEADER])')
@@ -45,30 +45,48 @@ def parseMessages(socket, folder, Subject="", From=""):
 
                 if re.search(pSubject, s):                    
                     date = re.search(pDate, s).groups()[0]
-                    date = dt.datetime.strptime(date.split(" +")[0], "%a, %d %b %Y %X")
+                    date = dt.datetime.strptime(date.split(" +")[0], "%a, %d %b %Y %X ")
 
                     subject = re.search(pSubject, s).groups()[0]
                     To = re.search(pTo, s).groups()[0]
                     From = re.search(pFrom, s).groups()[0]
 
+                    print(f"From {From} Subject: {subject} - {date}")
+                    socket.store(ID,'+FLAGS','\Seen')
+
                     if subject.startswith('-e'):
-                        socket.store(ID,'+FLAGS','\Seen')
+                        socket.copy(ID, "AUTO")
+                        socket.store(ID,'+FLAGS','\Deleted')
+                        
                         return From, To, subject, date
-    
+                    else:
+                        socket.copy(ID, "NOAUTO")
+                        socket.store(ID,'+FLAGS','\Deleted')
 
 def checkInbox(**kwargs):
     try:
-        cEmail = Variable.get("hotmail", deserialize_json=True)
-        MY_ADDRESS, PASS = cEmail["username"], cEmail["password"]
+        # cEmail = Variable.get("hotmail", deserialize_json=True)
+        # MY_ADDRESS, PASS = cEmail["username"], cEmail["password"]
+
+        print("Fetching credentials")
+
+        MY_ADDRESS, PASS = "pyflow@hotmail.com", "qwerty12345"
+        
+        print("Got credentials")
 
         M = imaplib.IMAP4_SSL('imap-mail.outlook.com', 993)
         M.login(MY_ADDRESS, PASS) 
+
+        print("Logged in")
+
         structure = getStructure(M)
 
         res = parseMessages(M, "Inbox", From="", Subject="")
+        print("Finished successfuly, output:\n" + res)
 
-    except:
+    except Exception as e:
         res = None
+        print(e)
     finally:
         M.close()
         M.logout()
