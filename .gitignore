@@ -1,6 +1,7 @@
 .idea/
 .venv/
 __init__.py
+*.pyc
 __pycache__/
 .vscode
 test*
